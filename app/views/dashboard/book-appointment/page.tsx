@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, FormEvent } from "react";
+import { Suspense, useEffect, useState, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
 
@@ -51,7 +51,23 @@ const NAV_ITEMS = [
   { label: "Profile", icon: "👤", href: "/views/dashboard/profile" },
 ];
 
+// ── Naya: outer component sirf Suspense wrap karta hai ──────────────
 export default function BookAppointment() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+          <p className="text-sm text-slate-400">Loading...</p>
+        </div>
+      }
+    >
+      <BookAppointmentForm />
+    </Suspense>
+  );
+}
+
+// ── Yeh hissa asal component hai, ab andar hai ───────────────────────
+function BookAppointmentForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const preselectedDoctorId = searchParams.get("doctorId");
